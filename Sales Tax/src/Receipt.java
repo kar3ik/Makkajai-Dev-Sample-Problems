@@ -1,28 +1,32 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Receipt {
     private List<Product> products;
 
-    public Receipt(List<Product> products) {
-        this.products = products;
+    public Receipt() {
+        this.products = new ArrayList<>();
     }
 
-    public void printReceipt() {
-        double totalSalesTaxes = 0;
-        double totalCost = 0;
+    public void addProduct(Product product) {
+        products.add(product);
+    }
 
+    public double calculateTotalTax() {
+        return products.stream().mapToDouble(Product::getTax).sum();
+    }
+
+    public double calculateTotalPrice() {
+        return products.stream().mapToDouble(Product::getPriceAfterTax).sum();
+    }
+
+    public List<String> generateReceipt() {
+        List<String> receiptLines = new ArrayList<>();
         for (Product product : products) {
-            double salesTax = TaxCalculator.calculateSalesTax(product);
-            double importDuty = TaxCalculator.calculateImportDuty(product);
-            double productCost = product.getPrice() + salesTax + importDuty;
-
-            totalSalesTaxes += salesTax + importDuty;
-            totalCost += productCost;
-
-            System.out.println(product.getName() + ": " + String.format("%.2f", productCost));
+            receiptLines.add(product.toString());
         }
-
-        System.out.println("Sales Taxes: " + String.format("%.2f", totalSalesTaxes));
-        System.out.println("Total: " + String.format("%.2f", totalCost));
+        receiptLines.add("Sales Taxes: " + String.format("%.2f", calculateTotalTax()));
+        receiptLines.add("Total: " + String.format("%.2f", calculateTotalPrice()));
+        return receiptLines;
     }
 }
