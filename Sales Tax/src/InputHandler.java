@@ -27,9 +27,7 @@ public class InputHandler {
             boolean isImported = name.contains("imported");
             boolean isExempt = name.contains("book") || name.contains("chocolate") || name.contains("pill");
 
-            for (int i = 0; i < quantity; i++) {
-                cart.addProduct(new Product(name, price, isImported, isExempt));
-            }
+            cart.addProduct(new Product(name, price, isImported, isExempt), quantity);
         }
         scanner.close();
         return cart;
